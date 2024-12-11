@@ -3,6 +3,7 @@ package version
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gogf/gf/v2/net/ghttp"
 	"runtime"
 )
 
@@ -64,4 +65,20 @@ func Print(serviceName string) {
 func PrintJSON(serviceName string) {
 	info := NewInfo(serviceName)
 	fmt.Println(info.JSON())
+}
+
+// RegisterGoFrameHandler 注册 GoFrame 的版本信息处理器
+func RegisterGoFrameHandler(server *ghttp.Server, serviceName string) {
+	server.BindHandler("/version", func(r *ghttp.Request) {
+		info := NewInfo(serviceName)
+		r.Response.WriteJson(info)
+	})
+}
+
+// RegisterGoFrameMiddleware 注册 GoFrame 的版本信息中间件
+func RegisterGoFrameMiddleware(group *ghttp.RouterGroup, serviceName string) {
+	group.ALL("/version", func(r *ghttp.Request) {
+		info := NewInfo(serviceName)
+		r.Response.WriteJson(info)
+	})
 }
